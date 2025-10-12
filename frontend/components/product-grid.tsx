@@ -1,10 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Plus } from "lucide-react"
 import AddToCartButton from "@/components/cart/AddToCartButton"
 
 interface Product {
@@ -57,7 +54,7 @@ export default function ProductGrid({ products, loading }: ProductGridProps) {
         <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
           <div
             className="relative cursor-pointer"
-            onClick={() => window.location.href = `/products/${product._id}`}
+            onClick={() => window.location.href = `/product/${product._id}`}
           >
             <img
               src={product.image || "/placeholder.svg?height=200&width=300&query=food item"}

@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import ProductDetails from "./components/ProductDetails";
-import RecommendedProducts from "./components/RecommendedProducts";
 
 interface Product {
   _id: string;
@@ -23,9 +22,6 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [recommendedSalads, setRecommendedSalads] = useState<Product[]>([]);
-  const [recommendedDrinks, setRecommendedDrinks] = useState<Product[]>([]);
-  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -51,39 +47,9 @@ export default function ProductPage() {
     }
   }, [id]);
 
-  useEffect(() => {
-    if (product) {
-      fetchRecommendations();
-    }
-  }, [product, id]);
-
-  const fetchRecommendations = async () => {
-    try {
-      setLoadingRecommendations(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/recommendations?mainDishId=${id}`);
-
-      if (!response.ok) {
-        throw new Error("Tavsiya qilingan taomlarni olishda xatolik yuz berdi");
-      }
-
-      const data = await response.json();
-      setRecommendedSalads(data.salads || []);
-      setRecommendedDrinks(data.drinks || []);
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-    } finally {
-      setLoadingRecommendations(false);
-    }
-  };
-
   const handleGoBack = () => {
     router.back();
   };
-
-  const handleRecommendationClick = (item: Product) => {
-    router.push(`/product/${item._id}`);
-  };
-
   if (loading) {
     return (
       <div className="container mx-auto py-12 flex justify-center">
@@ -120,7 +86,7 @@ export default function ProductPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Orqaga qaytish
         </Button>
-        
+
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
             {/* Mahsulot rasmi */}
@@ -138,24 +104,6 @@ export default function ProductPage() {
               <ProductDetails product={product} />
             </div>
           </div>
-        </div>
-
-        {/* Tavsiya qilingan taomlar */}
-        <div className="mt-12 bg-white rounded-xl shadow-md p-6">
-          <RecommendedProducts
-            title="Tavsiya qilingan salatlar"
-            products={recommendedSalads}
-            onProductClick={handleRecommendationClick}
-          />
-        </div>
-
-        {/* Tavsiya qilingan ichimliklar */}
-        <div className="mt-8 bg-white rounded-xl shadow-md p-6">
-          <RecommendedProducts
-            title="Tavsiya qilingan ichimliklar"
-            products={recommendedDrinks}
-            onProductClick={handleRecommendationClick}
-          />
         </div>
       </div>
     </>
