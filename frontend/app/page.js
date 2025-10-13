@@ -5,9 +5,10 @@ import RestaurantBanner from "@/components/restaurant-banner"
 import CategorySidebar from "@/components/category-sidebar"
 import ProductGrid from "@/components/product-grid"
 import Footer from "@/components/footer"
-import SiteHeader from "@/components/site-header"
+import Header from "@/components/header"
 import SmartMenu from "@/components/smart-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import MainLayout from "@/components/layouts/MainLayout"
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -48,7 +49,7 @@ export default function HomePage() {
     : products
 
   return (
-    <div className="min-h-screen bg-background">
+    <MainLayout>
       <RestaurantBanner />
 
       <div className="container mx-auto px-4 py-8">
@@ -79,8 +80,6 @@ export default function HomePage() {
           </TabsContent>
         </Tabs>
       </div>
-
-      <Footer />
-    </div>
+    </MainLayout>
   )
 }

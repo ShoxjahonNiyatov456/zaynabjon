@@ -92,7 +92,7 @@ export default function OrdersPage() {
       }
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${order._id}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

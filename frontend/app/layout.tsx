@@ -21,9 +21,7 @@ export default function RootLayout({
     <html lang="uz" suppressHydrationWarning>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <CartProvider>
-          <MainLayout>
-            {children}
-          </MainLayout>
+          {children}
         </CartProvider>
         <Analytics />
       </body>
