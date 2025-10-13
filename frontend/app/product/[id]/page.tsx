@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import ProductDetails from "./components/ProductDetails";
+import SmartMenu from "@/components/smart-menu";
 
 interface Product {
   _id: string;
@@ -104,6 +105,11 @@ export default function ProductPage() {
               <ProductDetails product={product} />
             </div>
           </div>
+        </div>
+
+        {/* Smart Menu */}
+        <div className="mt-12">
+          <SmartMenu />
         </div>
       </div>
     </>

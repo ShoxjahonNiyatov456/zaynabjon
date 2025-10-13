@@ -6,12 +6,15 @@ import CategorySidebar from "@/components/category-sidebar"
 import ProductGrid from "@/components/product-grid"
 import Footer from "@/components/footer"
 import SiteHeader from "@/components/site-header"
+import SmartMenu from "@/components/smart-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("classic")
 
   useEffect(() => {
     fetchCategories()
@@ -49,19 +52,32 @@ export default function HomePage() {
       <RestaurantBanner />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64">
-            <CategorySidebar
-              categories={categories}
-              selectedCategory={selectedCategory}
-              onCategorySelect={setSelectedCategory}
-            />
-          </aside>
+        <Tabs defaultValue="classic" className="mb-8" onValueChange={setActiveTab}>
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+            <TabsTrigger value="classic">Klassik ko'rinish</TabsTrigger>
+            <TabsTrigger value="smart">Smart Menu</TabsTrigger>
+          </TabsList>
 
-          <main className="flex-1">
-            <ProductGrid products={filteredProducts} loading={loading} />
-          </main>
-        </div>
+          <TabsContent value="classic">
+            <div className="flex flex-col lg:flex-row gap-8">
+              <aside className="lg:w-64">
+                <CategorySidebar
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onCategorySelect={setSelectedCategory}
+                />
+              </aside>
+
+              <main className="flex-1">
+                <ProductGrid products={filteredProducts} loading={loading} />
+              </main>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="smart">
+            <SmartMenu />
+          </TabsContent>
+        </Tabs>
       </div>
 
       <Footer />

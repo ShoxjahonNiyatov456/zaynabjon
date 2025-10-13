@@ -28,6 +28,11 @@ const orderItemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
     {
+        orderId: {
+            type: String,
+            unique: true,
+            default: () => Math.floor(100000 + Math.random() * 900000).toString(), // 6 raqamli tasodifiy son
+        },
         phoneNumber: {
             type: String,
             required: true,

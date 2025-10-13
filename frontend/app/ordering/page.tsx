@@ -82,7 +82,6 @@ export default function OrderPage() {
     }
   }, [toast])
 
-  // Koordinatalar asosida manzilni olish
   const fetchAddressFromCoordinates = async (lat: any, lng: any) => {
     try {
       const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`)
@@ -107,7 +106,6 @@ export default function OrderPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     if (items.length === 0) {
       toast({
         title: "Savat bo'sh",
@@ -116,9 +114,7 @@ export default function OrderPage() {
       })
       return
     }
-
     setLoading(true)
-
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
         method: "POST",
@@ -126,6 +122,7 @@ export default function OrderPage() {
         body: JSON.stringify({
           phoneNumber: phone,
           location: address,
+          totalPrice: totalPrice,
           coordinates: {
             lat: selectedLocation.lat,
             lng: selectedLocation.lng
@@ -138,19 +135,14 @@ export default function OrderPage() {
           })),
         }),
       })
-
       const data = await response.json()
-
       if (!response.ok) throw new Error(data.message)
-
       toast({
         title: "Buyurtma qabul qilindi",
         description: "Tez orada siz bilan bog'lanamiz",
       })
-
       clearCart()
-      // Buyurtma muvaffaqiyatli bo'lgandan so'ng admin/orders sahifasiga yo'naltirish
-      router.push("/admin/orders")
+      router.push(`/order-success/${data._id}`)
     } catch (error) {
       toast({
         title: "Xatolik",
@@ -165,7 +157,7 @@ export default function OrderPage() {
   return (
     <div className="min-h-screen bg-muted/30 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-balance">Buyurtma berish</h1>
+        <h1 className="text-3xl font-bold mb-8 text-balance text-end">Sizning buyurtmalaringiz</h1>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Cart Section */}

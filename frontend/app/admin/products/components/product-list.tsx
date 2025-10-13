@@ -82,7 +82,7 @@ export function ProductList({
                 filteredProducts.map((product) => (
                   <TableRow key={product._id}>
                     <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                    <TableCell>${product.price ? product.price.toFixed(2) : '0.00'}</TableCell>
                     <TableCell>{getCategoryName(product.category)}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell className="text-right">

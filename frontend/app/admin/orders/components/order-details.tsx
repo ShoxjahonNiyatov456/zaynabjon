@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Order, OrderProduct } from "../types";
+import { Order } from "../types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 
@@ -18,6 +18,7 @@ export function OrderDetails({
   loading,
   onClose
 }: OrderDetailsProps) {
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Processing': return 'bg-blue-100 text-blue-800';
@@ -26,7 +27,6 @@ export function OrderDetails({
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
@@ -49,11 +49,11 @@ export function OrderDetails({
               </div>
               <div>
                 <h3 className="font-semibold text-sm text-muted-foreground">Date</h3>
-                <p>{new Date(order.date).toLocaleDateString()}</p>
+                <p>{order.date ? new Date(order.date).toLocaleDateString() : 'N/A'}</p>
               </div>
               <div>
                 <h3 className="font-semibold text-sm text-muted-foreground">Customer</h3>
-                <p>{order.customer}</p>
+                <p>{order.customer || 'N/A'}</p>
               </div>
               <div>
                 <h3 className="font-semibold text-sm text-muted-foreground">Status</h3>
@@ -79,10 +79,10 @@ export function OrderDetails({
                     {order.products && order.products.length > 0 ? (
                       order.products.map((item, index) => (
                         <TableRow key={index}>
-                          <TableCell>{item.productName}</TableCell>
+                          <TableCell>{item.name}</TableCell>
                           <TableCell>{item.quantity}</TableCell>
-                          <TableCell>${item.price.toFixed(2)}</TableCell>
-                          <TableCell className="text-right">${(item.price * item.quantity).toFixed(2)}</TableCell>
+                          <TableCell>${item.price ? item.price.toFixed(2) : '0.00'}</TableCell>
+                          <TableCell className="text-right">${item.price && item.quantity ? (item.price * item.quantity).toFixed(2) : '0.00'}</TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -97,7 +97,7 @@ export function OrderDetails({
                         Total:
                       </TableCell>
                       <TableCell className="text-right font-bold">
-                        ${order.total.toFixed(2)}
+                        ${order.totalPrice ? order.totalPrice.toFixed(2) : '0.00'}
                       </TableCell>
                     </TableRow>
                   </TableBody>

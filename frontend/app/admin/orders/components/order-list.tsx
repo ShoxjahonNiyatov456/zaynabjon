@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Eye, Loader2 } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { Order } from '../types';
 
 interface OrderListProps {
@@ -12,16 +12,18 @@ interface OrderListProps {
   loading: boolean;
   error: string;
   onViewDetails: (order: Order) => void;
+  onUpdateStatus: (order: Order, status: 'delivered' | 'cancelled') => void;
 }
 
 export function OrderList({
   orders,
   loading,
   error,
-  onViewDetails,
+  onUpdateStatus,
 }: OrderListProps) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
 
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const filteredOrders = orders.filter(order =>
     order._id.includes(searchQuery) ||
     order.customer.toLowerCase().includes(searchQuery.toLowerCase())
@@ -66,10 +68,9 @@ export function OrderList({
             <TableHeader>
               <TableRow>
                 <TableHead>Order ID</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Products</TableHead>
+                <TableHead>Miqdori</TableHead>
                 <TableHead>Total</TableHead>
-                <TableHead>Items</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -84,25 +85,40 @@ export function OrderList({
               ) : (
                 filteredOrders.map((order) => (
                   <TableRow key={order._id}>
-                    <TableCell className="font-medium">#{order._id}</TableCell>
-                    <TableCell>{order.customer}</TableCell>
-                    <TableCell>{new Date(order.date).toLocaleDateString()}</TableCell>
-                    <TableCell>${order.total.toFixed(2)}</TableCell>
-                    <TableCell>{order.items}</TableCell>
+                    <TableCell className="font-medium">#{order._id.slice(-6)}</TableCell>
+                    <TableCell>
+                      {order.products && order.products.length > 0
+                        ? order.products.map(p => `${p.name}`).join(', ')
+                        : order.items > 0 ? `${order.items} items` : 'No products'}
+                    </TableCell>
+                    <TableCell>{order.products?.reduce((total, item) => total + item.quantity, 0) || 0}</TableCell>
+                    <TableCell>{order?.totalPrice || 0}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => onViewDetails(order)}
-                        disabled={loading}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-green-50 hover:bg-green-100 text-green-600"
+                          onClick={() => onUpdateStatus(order, 'delivered')}
+                          disabled={loading}
+                        >
+                          ✅
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="bg-red-50 hover:bg-red-100 text-red-600"
+                          onClick={() => onUpdateStatus(order, 'cancelled')}
+                          disabled={loading}
+                        >
+                          ❌
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
