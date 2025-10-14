@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card"
 import { Minus, Plus, X, MapPin } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'
+import MainLayout from "@/components/layouts/MainLayout"
 
 // Google Maps konfiguratsiyasi
 const mapContainerStyle = {
@@ -26,6 +27,14 @@ const defaultCenter = {
 }
 
 export default function OrderPage() {
+  return (
+    <MainLayout>
+      <OrderContent />
+    </MainLayout>
+  )
+}
+
+function OrderContent() {
   const { items, updateQuantity, removeItem, clearCart, totalPrice } = useCart()
   const [phone, setPhone] = useState("")
   const [address, setAddress] = useState("")
