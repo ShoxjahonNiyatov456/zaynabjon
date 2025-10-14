@@ -1,17 +1,19 @@
 import multer from "multer";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import cloudinary from "../config/cloudinary.js";
 
-// Cloudinary storage sozlamalari
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: {
-        folder: "products", // Cloudinary ichida papka nomi
-        allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"],
-        transformation: [{ quality: "auto", fetch_format: "auto" }], // avtomatik optimallashtirish
+const storage = multer.memoryStorage();
+
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
     },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Faqat rasm fayllarini yuklash mumkin!'), false);
+        }
+    }
 });
-
-const upload = multer({ storage });
 
 export default upload;

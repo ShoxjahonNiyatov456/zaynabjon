@@ -77,15 +77,27 @@ export const productsApi = {
   getAll: () => apiRequest<any[]>("/products"),
   getById: (id: string) => apiRequest<any>(`/products/${id}`),
   getByCategory: (categoryId: string) => apiRequest<any[]>(`/products/category/${categoryId}`),
-  create: (data: any) =>
-    apiRequest<any>("/products", {
+  create: (data: FormData) =>
+    fetch(`${API_BASE_URL}/products`, {
       method: "POST",
-      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
+      },
+      body: data,
+    }).then(res => {
+      if (!res.ok) throw new ApiError(res.status, `HTTP error! status: ${res.status}`);
+      return res.json();
     }),
-  update: (id: string, data: any) =>
-    apiRequest<any>(`/products/${id}`, {
+  update: (id: string, data: FormData) =>
+    fetch(`${API_BASE_URL}/products/${id}`, {
       method: "PUT",
-      body: JSON.stringify(data),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("admin-token")}`,
+      },
+      body: data,
+    }).then(res => {
+      if (!res.ok) throw new ApiError(res.status, `HTTP error! status: ${res.status}`);
+      return res.json();
     }),
   delete: (id: string) =>
     apiRequest<void>(`/products/${id}`, {

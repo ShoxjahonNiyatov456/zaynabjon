@@ -14,7 +14,7 @@ import {
 import { ProductList } from './components/product-list';
 import { ProductForm } from './components/product-form';
 import { DeleteProduct } from './components/delete-product';
-import { Product, Category } from './types';
+import { Product, Category, ProductFormData } from './types';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -65,10 +65,25 @@ export default function ProductsPage() {
     }
   };
 
-  const handleAddProduct = async (productData: any): Promise<void> => {
+  const handleAddProduct = async (productData: ProductFormData): Promise<void> => {
     try {
       setLoading(true);
-      await productsApi.create(productData);
+      const formData = new globalThis.FormData();
+
+      // Add text fields
+      formData.append('name', productData.name);
+      formData.append('price', productData.price);
+      formData.append('category', productData.category);
+      formData.append('description', productData.description);
+
+      // Add image files
+      if (productData.images && productData.images.length > 0) {
+        for (let i = 0; i < productData.images.length; i++) {
+          formData.append('images', productData.images[i]);
+        }
+      }
+
+      await productsApi.create(formData);
       await fetchProducts();
       setIsAddDialogOpen(false);
 
@@ -87,12 +102,27 @@ export default function ProductsPage() {
     }
   };
 
-  const handleEditProduct = async (productData: any): Promise<void> => {
+  const handleEditProduct = async (productData: ProductFormData): Promise<void> => {
     if (!currentProduct) return;
 
     try {
       setLoading(true);
-      await productsApi.update(currentProduct._id, productData);
+      const formData = new globalThis.FormData();
+
+      // Add text fields
+      formData.append('name', productData.name);
+      formData.append('price', productData.price);
+      formData.append('category', productData.category);
+      formData.append('description', productData.description);
+
+      // Add image files
+      if (productData.images && productData.images.length > 0) {
+        for (let i = 0; i < productData.images.length; i++) {
+          formData.append('images', productData.images[i]);
+        }
+      }
+
+      await productsApi.update(currentProduct._id, formData);
       await fetchProducts();
       setIsEditDialogOpen(false);
 

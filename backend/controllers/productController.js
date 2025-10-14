@@ -27,6 +27,9 @@ export const getProductById = async (req, res) => {
 // Create product
 export const createProduct = async (req, res) => {
     try {
+        console.log("Request body:", req.body);
+        console.log("Request files:", req.files);
+
         // Majburiy maydonlarni tekshirish
         if (!req.body.name || !req.body.price || !req.body.category) {
             return res.status(400).json({
@@ -36,10 +39,24 @@ export const createProduct = async (req, res) => {
 
         let uploadedImages = [];
 
-        if (req.files?.length > 0) {
-            uploadedImages = await Promise.all(
-                req.files.map((file) => uploadToCloudinary(file.buffer))
-            );
+        if (req.files && req.files.images && req.files.images.length > 0) {
+            // Har bir fayl uchun
+            for (const file of req.files.images) {
+                try {
+                    if (!file.buffer || file.buffer.length === 0) {
+                        console.error("Empty file buffer detected");
+                        continue; // Bo'sh fayllarni o'tkazib yuborish
+                    }
+
+                    const imageUrl = await uploadToCloudinary(file.buffer);
+                    if (imageUrl) {
+                        uploadedImages.push(imageUrl);
+                    }
+                } catch (uploadError) {
+                    console.error("Rasm yuklashda xatolik:", uploadError);
+                    // Xatolik bo'lsa ham davom etamiz, lekin xatoni log qilamiz
+                }
+            }
         }
 
         const product = new Product({
@@ -64,10 +81,10 @@ export const updateProduct = async (req, res) => {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ message: "Mahsulot topilmadi" });
 
-        let uploadedImages = product.images;
-        if (req.files?.length > 0) {
+        let uploadedImages = product.images || [];
+        if (req.files && req.files.images) {
             uploadedImages = await Promise.all(
-                req.files.map((file) => uploadToCloudinary(file.buffer))
+                req.files.images.map((file) => uploadToCloudinary(file.buffer))
             );
         }
 

@@ -6,6 +6,7 @@ export interface Product {
   categoryName?: string;
   description?: string;
   imageUrl?: string;
+  images?: string[];
 }
 
 export interface Category {
@@ -13,10 +14,10 @@ export interface Category {
   name: string;
 }
 
-export interface FormData {
+export interface ProductFormData {
   name: string;
   price: string;
   category: string;
   description: string;
-  imageUrl: string;
+  images: File[];
 }
