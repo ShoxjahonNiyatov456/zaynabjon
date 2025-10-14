@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { getSettings } from "@/lib/settingsApi"
-import { MapPin, Phone, Instagram, Globe, MessageCircle } from "lucide-react"
+import { MapPin, Phone, Instagram, Globe } from "lucide-react"
 
 export default function RestaurantBanner() {
   const [settings, setSettings] = useState({
@@ -10,7 +10,7 @@ export default function RestaurantBanner() {
     description: "",
     bannerUrl: "/delicious-food-banner.png",
     logo: "",
-    phoneNumbers: [],
+    phoneNumbers: [] as string[],
     location: "",
     instagram: "",
     telegram: "",
@@ -27,6 +27,8 @@ export default function RestaurantBanner() {
           logo: data.logo || "",
           phoneNumbers: data.phonenumbers,
           location: data.location || "",
+          instagram: data.socialMediaLinks?.instagram || "",
+          telegram: data.socialMediaLinks?.telegram || ""
         })
       } catch (error) {
         console.error("Error fetching settings:", error)
@@ -37,7 +39,7 @@ export default function RestaurantBanner() {
   }, [])
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden">
+    <div className="relative w-full h-[400px] lg:h-[450px] overflow-hidden bg-muted">
       {/* Background Image */}
       <img
         src={settings.bannerUrl || "/delicious-food-banner.png"}
@@ -45,19 +47,17 @@ export default function RestaurantBanner() {
         className="w-full h-full object-cover"
       />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
 
       {/* Content Container */}
       <div className="absolute inset-0 flex items-center">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Section - Logo and Restaurant Info */}
-            <div className="lg:col-span-7 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+        <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col items-center lg:items-start gap-6">
               {/* Logo */}
               {settings.logo && (
                 <div className="flex-shrink-0">
-                  <div className="w-32 h-32 rounded-full overflow-hidden bg-white/10 backdrop-blur-sm border-4 border-white/20 shadow-2xl">
+                  <div className="w-24 h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden bg-white/95 backdrop-blur-sm shadow-lg ring-1 ring-black/5">
                     <img
                       src={settings.logo || "/placeholder.svg"}
                       alt="Restaurant Logo"
@@ -67,65 +67,70 @@ export default function RestaurantBanner() {
                 </div>
               )}
 
-              {/* Restaurant Name and Social Links */}
-              <div className="text-center lg:text-left">
-                <h1 className="text-5xl lg:text-6xl font-bold text-white mb-2 font-serif">Welcome!</h1>
-                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">{settings.title || "BigJoy"}</h2>
-                <p className="text-lg text-white/90 mb-4">{settings.description || settings.title}</p>
+              {/* Restaurant Name and Description */}
+              <div className="text-center lg:text-left space-y-3">
+                <h1 className="text-4xl lg:text-5xl font-serif font-light text-white tracking-tight">
+                  {settings.title || "BigJoy"}
+                </h1>
+                <p className="text-base lg:text-lg text-white/80 font-light leading-relaxed max-w-md">
+                  {settings.description || "Discover exceptional dining"}
+                </p>
 
-                {/* Social Media Icons */}
-                <div className="flex gap-3 justify-center lg:justify-start">
-                  {settings.instagram && (
-                    <a
-                      href={settings.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center border border-white/30"
-                    >
-                      <Instagram className="w-5 h-5 text-white" />
-                    </a>
-                  )}
-                  {settings.telegram && (
-                    <a
-                      href={settings.telegram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center justify-center border border-white/30"
-                    >
-                      <Globe className="w-5 h-5 text-white" />
-                    </a>
-                  )}
-                </div>
+                {(settings.instagram || settings.telegram) && (
+                  <div className="flex gap-3 justify-center lg:justify-start pt-2">
+                    {settings.instagram && (
+                      <a
+                        href={settings.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all flex items-center justify-center border border-white/20"
+                        aria-label="Instagram"
+                      >
+                        <Instagram className="w-4 h-4 text-white" />
+                      </a>
+                    )}
+                    {settings.telegram && (
+                      <a
+                        href={settings.telegram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all flex items-center justify-center border border-white/20"
+                        aria-label="Telegram"
+                      >
+                        <Globe className="w-4 h-4 text-white" />
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Right Section - Contact Info Cards */}
-            <div className="lg:col-span-5 flex flex-col gap-4">
-              {/* Address Card */}
+            <div className="flex flex-col gap-4 lg:ml-auto lg:max-w-md">
+              {/* Address */}
               {settings.location && (
-                <div className="bg-emerald-700/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-emerald-600/50 hover:bg-emerald-700 transition-all">
+                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-5 shadow-lg border border-black/5 hover:shadow-xl transition-shadow">
                   <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-white" />
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-foreground" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-white/80 mb-1 font-medium">Address</p>
-                      <p className="text-lg font-semibold text-white leading-tight">{settings.location}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Manzil</p>
+                      <p className="text-sm font-medium text-foreground leading-relaxed">{settings.location}</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Phone Card */}
+              {/* Phone */}
               {settings.phoneNumbers && settings.phoneNumbers.length > 0 && (
-                <div className="bg-emerald-700/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-emerald-600/50 hover:bg-emerald-700 transition-all">
+                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-5 shadow-lg border border-black/5 hover:shadow-xl transition-shadow">
                   <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                      <Phone className="w-6 h-6 text-white" />
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                      <Phone className="w-5 h-5 text-foreground" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-white/80 mb-1 font-medium">Phone</p>
-                      <p className="text-lg font-semibold text-white leading-tight">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Telefon</p>
+                      <p className="text-sm font-medium text-foreground leading-relaxed">
                         {Array.isArray(settings.phoneNumbers)
                           ? settings.phoneNumbers.join(", ")
                           : settings.phoneNumbers}
