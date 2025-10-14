@@ -6,7 +6,6 @@ export interface Product {
   categoryName?: string;
   description?: string;
   imageUrl?: string;
-  stock: number;
 }
 
 export interface Category {
@@ -20,5 +19,4 @@ export interface FormData {
   category: string;
   description: string;
   imageUrl: string;
-  stock: string;
 }

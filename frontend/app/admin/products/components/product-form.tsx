@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -21,7 +21,6 @@ interface FormData {
   category: string;
   description: string;
   imageUrl: string;
-  stock: string;
 }
 
 interface ProductFormProps {
@@ -47,7 +46,6 @@ export function ProductForm({
     category: initialData?.category || '',
     description: initialData?.description || '',
     imageUrl: initialData?.imageUrl || '',
-    stock: initialData?.stock ? initialData.stock.toString() : '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
@@ -68,7 +66,6 @@ export function ProductForm({
       category: formData.category,
       description: formData.description,
       imageUrl: formData.imageUrl,
-      stock: parseInt(formData.stock, 10),
     };
 
     await onSubmit(productData);
@@ -125,22 +122,7 @@ export function ProductForm({
             </SelectContent>
           </Select>
         </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="stock">Stock</Label>
-          <Input
-            id="stock"
-            name="stock"
-            type="number"
-            min="0"
-            value={formData.stock}
-            onChange={handleInputChange}
-            disabled={loading}
-            required
-          />
-        </div>
       </div>
-
       <div className="grid gap-2">
         <Label htmlFor="imageUrl">Image URL</Label>
         <Input
@@ -151,7 +133,6 @@ export function ProductForm({
           disabled={loading}
         />
       </div>
-
       <div className="grid gap-2">
         <Label htmlFor="description">Description</Label>
         <Textarea
