@@ -6,7 +6,6 @@ import CategorySidebar from "@/components/category-sidebar"
 import ProductGrid from "@/components/product-grid"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
-import SmartMenu from "@/components/smart-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import MainLayout from "@/components/layouts/MainLayout"
 
@@ -53,13 +52,8 @@ export default function HomePage() {
       <RestaurantBanner />
 
       <div className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="classic" className="mb-8" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-            <TabsTrigger value="classic">Klassik ko'rinish</TabsTrigger>
-            <TabsTrigger value="smart">Smart Menu</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="classic">
+        <div defaultValue="classic" className="mb-8" onValueChange={setActiveTab}>
+          <div value="classic">
             <div className="flex flex-col lg:flex-row gap-8">
               <aside className="lg:w-64">
                 <CategorySidebar
@@ -68,17 +62,12 @@ export default function HomePage() {
                   onCategorySelect={setSelectedCategory}
                 />
               </aside>
-
               <main className="flex-1">
                 <ProductGrid products={filteredProducts} loading={loading} />
               </main>
             </div>
-          </TabsContent>
-
-          <TabsContent value="smart">
-            <SmartMenu />
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
     </MainLayout>
   )
