@@ -24,10 +24,10 @@ export default function ProductGrid({ products, loading }: ProductGridProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, index) => (
-          <Card key={index} className="overflow-hidden">
+          <Card key={index} className="overflow-hidden border-neutral-200/60 bg-white/95 backdrop-blur-sm">
             <Skeleton className="h-48 w-full" />
-            <CardHeader>
-              <Skeleton className="h-4 w-3/4" />
+            <CardHeader className="space-y-3">
+              <Skeleton className="h-5 w-3/4" />
               <Skeleton className="h-3 w-full" />
               <Skeleton className="h-3 w-2/3" />
             </CardHeader>
@@ -43,7 +43,7 @@ export default function ProductGrid({ products, loading }: ProductGridProps) {
   if (!products || products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground text-lg">Hech qanday mahsulot topilmadi</p>
+        <p className="text-muted-foreground text-lg font-light">Hech qanday mahsulot topilmadi</p>
       </div>
     )
   }
@@ -51,28 +51,33 @@ export default function ProductGrid({ products, loading }: ProductGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {products.map((product) => (
-        <Card key={product._id} className="overflow-hidden hover:shadow-lg transition-shadow">
+        <Card
+          key={product._id}
+          className="overflow-hidden border-neutral-200/60 bg-white/95 backdrop-blur-sm transition-all duration-300 hover:shadow-lg group"
+        >
           <div
-            className="relative cursor-pointer"
-            onClick={() => window.location.href = `/product/${product._id}`}
+            className="relative cursor-pointer overflow-hidden"
+            onClick={() => (window.location.href = `/product/${product._id}`)}
           >
             <img
               src={product.image || "/placeholder.svg?height=200&width=300&query=food item"}
               alt={product.name}
-              className="w-full h-48 object-cover transition-all duration-300 hover:scale-105 hover:brightness-90"
+              className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
-          <CardHeader>
+          <CardHeader className="space-y-2">
             <CardTitle
-              className="text-lg hover:text-primary cursor-pointer transition-colors"
-              onClick={() => window.location.href = `/product/${product._id}`}
+              className="text-lg font-medium text-neutral-800 hover:text-neutral-600 cursor-pointer transition-colors leading-snug"
+              onClick={() => (window.location.href = `/product/${product._id}`)}
             >
               {product.name}
             </CardTitle>
-            <CardDescription className="text-sm">{product.description}</CardDescription>
-            <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-primary">{product.price.toLocaleString()} so'm</span>
+            <CardDescription className="text-sm text-neutral-600 font-light leading-relaxed">
+              {product.description}
+            </CardDescription>
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xl font-semibold text-neutral-700">{product.price.toLocaleString()} so'm</span>
             </div>
           </CardHeader>
 
