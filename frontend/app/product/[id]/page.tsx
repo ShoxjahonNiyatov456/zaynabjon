@@ -12,7 +12,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  image: string;
+  images?: string[];
   category: string;
 }
 
@@ -92,7 +92,7 @@ export default function ProductPage() {
             {/* Mahsulot rasmi */}
             <div className="relative h-[400px] overflow-hidden">
               <img
-                src={product.image || "/placeholder.svg?height=400&width=600&query=food"}
+                src={product.images && product.images.length > 0 ? product.images[0].replace(/[` ]/g, '') : "/placeholder.svg?height=400&width=600&query=food"}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />

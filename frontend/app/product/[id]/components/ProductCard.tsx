@@ -13,7 +13,8 @@ interface Product {
   name: string
   description: string
   price: number
-  image: string
+  image?: string
+  images?: string[]
   category: string
 }
 
@@ -58,7 +59,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         }}
       >
         <img
-          src={product.image || "/placeholder.svg?height=200&width=300&query=food"}
+          src={(product.images && product.images.length > 0) ? product.images[0].replace(/[` ]/g, '') : (product.image || "/placeholder.svg?height=200&width=300&query=food")}
           alt={product.name}
           className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
         />

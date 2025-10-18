@@ -9,7 +9,8 @@ interface Product {
   name: string
   description: string
   price: number
-  image: string
+  image?: string
+  images?: string[]
   category: string
   available: boolean
 }
@@ -60,7 +61,7 @@ export default function ProductGrid({ products, loading }: ProductGridProps) {
             onClick={() => (window.location.href = `/product/${product._id}`)}
           >
             <img
-              src={product.image || "/placeholder.svg?height=200&width=300&query=food item"}
+              src={(product.images && product.images.length > 0) ? product.images[0].replace(/[` ]/g, '') : (product.image || "/placeholder.svg?height=200&width=300&query=food item")}
               alt={product.name}
               className="w-full h-48 object-cover transition-all duration-500 group-hover:scale-105"
             />
